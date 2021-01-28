@@ -15,7 +15,7 @@
             var sumMax = parseInt(document.form1.sumMax.value);
 
             var cnt = 0;
-            if (min <= max && sumMin <= sumMax) {
+            if (min <= (max-1) && sumMin <= sumMax) {
 
                 do {
                     var res1 = Math.floor(Math.random() * (max - min) + parseInt(min));
