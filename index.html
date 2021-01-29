@@ -14,18 +14,39 @@
             var sumMin = parseInt(document.form1.sumMin.value);
             var sumMax = parseInt(document.form1.sumMax.value);
 
-            var cnt = 0;
-            if (min <= (max-1) && sumMin <= sumMax) {
+            var sumFlg = document.form1.sumFlg.checked;
+            var cntHope = parseInt(document.form1.cntHope.value);
 
+            var cnt = 0;
+
+            var res1 = 0;
+            var res1 = 0;
+            var res1 = 0;
+            var res4 = 0;
+
+            var sumRes = 0;
+
+
+
+            if (min <= (max - 1) && sumMin <= sumMax) {
+
+                //合計値に比重して乱数しますか？
+                if (sumFlg) {
+                    //合計値を乱数で先に決定
+                    sumMin = Math.floor(Math.random() * (sumMax + 1 - sumMin) + parseInt(sumMin));
+                    sumMax = sumMin;
+                }
+
+                //合計値に合うまで各項目乱数決定もしくは規定回数までガチャ
                 do {
-                    var res1 = Math.floor(Math.random() * (max - min) + parseInt(min));
-                    var res2 = Math.floor(Math.random() * (max - min) + parseInt(min));
-                    var res3 = Math.floor(Math.random() * (max - min) + parseInt(min));
-                    var res4 = Math.floor(Math.random() * (max - min) + parseInt(min));
-                    var sumRes = res1 + res2 + res3 + res4;
+                    res1 = Math.floor(Math.random() * (max - min) + parseInt(min));
+                    res2 = Math.floor(Math.random() * (max - min) + parseInt(min));
+                    res3 = Math.floor(Math.random() * (max - min) + parseInt(min));
+                    res4 = Math.floor(Math.random() * (max - min) + parseInt(min));
+                    sumRes = res1 + res2 + res3 + res4;
                     cnt += 1;
 
-                } while ((sumRes < sumMin || sumRes > sumMax) && cnt < 50);
+                } while ((sumRes < sumMin || sumRes > sumMax) && cnt < cntHope);
 
 
 
@@ -38,7 +59,7 @@
 
                 document.form1.cnt.value = cnt;
 
-                if (cnt !== 50) {
+                if (cnt !== cntHope) {
                     document.form1.ell.value = "";
                 } else {
                     document.form1.ell.value = "成功確率低すぎかもしらん";
@@ -78,6 +99,20 @@
                 <th>合計<ib2>最大</ib2>値<ib>*</ib>
                 </th>
                 <td><input type="number" name="sumMax" value=300></td>
+            </tr>
+        </table>
+
+        <br>
+        <table border="1">
+            <tr>
+                <th>合計値優先<ib>*</ib>
+                </th>
+                <td><input type="checkbox" name="sumFlg"></td>
+            </tr>
+            <tr>
+                <th>試行回数<ib>*</ib>
+                </th>
+                <td><input type="number" name="cntHope" value=500000></td>
             </tr>
 
         </table>
@@ -122,7 +157,7 @@
                 <td><input type="number" name="sumAvg" readonly></td>
             </tr>
             <tr>
-                <th>試行回数</th>
+                <th>実試行回数</th>
                 <td><input type="number" name="cnt" readonly></td>
             </tr>
             <tr>
@@ -131,19 +166,66 @@
             </tr>
         </table>
     </form>
-        <p>単体最小値…乱数の最小値が決まります<br>
+
+    <font size="2">
+    <p>単体最小値…乱数の最小値が決まります<br>
         例）30を設定したら29以下の数字は出てきません</p>
-        <p>単体最大値…乱数の最大値が決まります<br>
+    <p>単体最大値…乱数の最大値が決まります<br>
         例）30を設定したら31以上の数字は出てきません</p>
-        <p>合計最小値…乱数の合計の最小値が決まります<br>
+    <p>合計最小値…乱数の合計の最小値が決まります<br>
         例）30を設定したら合計値が29以下なら乱数を自動で振りなおします</p>
-        <p>合計最大値…乱数の合計の最大値が決まります<br>
+    <p>合計最大値…乱数の合計の最大値が決まります<br>
         例）30を設定したら合計値が31以上なら乱数を自動で振りなおします</p>
 
-        <p>合計値…乱数の合計値が入ります<br>
+    <p>合計値…乱数の合計値が入ります<br>
         平均値…乱数の平均値が小数点第2位で四捨五入されて入ります<br>
-        試行回数…成功するまでに何回乱数を出したか入ります<br>*ループ対策の為50回で強制終了します<br>
-        エラー…試行回数が多すぎたり設定次第で注意文が入ります</p>
+        実試行回数…成功するまでに何回乱数を出したか入ります<br>*ループ対策の為、試行回数で強制終了します<br>
+        エラー…実試行回数が試行回数を超えたり設定次第で注意文が入ります</p>
+
+    <p>
+        <ib>
+            <font size="1">2021/01/29追加</font>
+        </ib><br>
+        合計値優先…チェックすると合計値の出現率が乱数決定してから<br>
+        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;合計値に合わせて乱数を試行します
+
+
+        <br>
+        試行回数…設定数分、乱数を試行します
+    </p>
+    <p>合計値優先について<br>
+    例）<ib2>合計値</ib2>をA～Eの<ib2>グループ</ib2>、<ib>組み合わせ</ib>の数を<ib2>グループ</ib2>内の<ib>人数</ib>に例えます<br>
+    &emsp;&emsp;Aに5人、Bに4人、Cに3人、Dに2人、Eに1人から、<br>
+    &emsp;&emsp;合計値優先の<ib2>オン</ib2><ib>オフ</ib>の違いで1人の選び方をした時、<br>
+    &emsp;&emsp;Aの5番目（<ib>A-5</ib>）、Cの3番目（<ib>C-3</ib>）、Eの1番目（<ib>E-1</ib>）の出現率を比較します<br>
+
+    </p>
+
+    <table border="1" style="width: 590px;">
+        <tr>
+            <th style="width: 100px;">合計値優先<br><ib2>オン</ib2></th>
+            <td style="width: 300px;">A～Eの<ib2>グループ</ib2>から1つ選んでから<br>
+                1<ib>人</ib>選ぶ形になります</td>
+                <td style="width: 110px;"><ib2>各グループ</ib2><br>出現率:20%</td>
+            <td style="width: 80px;"><ib>A-5</ib>出現率:4%<br><ib>C-3</ib>出現率:6-7%<br><ib>E-1</ib>出現率:20%</td>
+        </tr>
+        <tr>
+            <th >合計値優先<br><ib>オフ</ib></th>
+            <td>A:5人、B:4人、C:3人、D:2人、E:1人<br>
+                の計15<ib>人</ib>から1<ib>人</ib>を選びます</td>
+                <td style="width: 100px;"><ib2>Aグループ</ib2><br>出現率:33.3..%<br><ib2>Cグループ</ib2>
+                    <br>出現率:20%<br><ib2>Eグループ</ib2><br>出現率:6-7%</td>
+            <td><ib>各個人</ib>出現率:6-7%</td>
+        </tr>
+    </table>
+    <p>
+    説明…設定によっては合計値の低い方など片方に成立する組み合わせが多く、<br>
+    &emsp;&emsp;また出現率も数に応じて高くなります<br>
+    &emsp;&emsp;そのため組み合わせではなく、合計値にランダム性を持たせたい場合に活用してください
+    </p>
+    </font>
+
+
 
 </body>
 
